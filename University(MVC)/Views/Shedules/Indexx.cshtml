@@ -1,0 +1,37 @@
+﻿@model IEnumerable<University_MVC_.Shedule>
+
+@{
+    ViewData["Title"] = "Indexx";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Day)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Group)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <a asp-action="ShowLessons" asp-route-id="@item.Id"> @Html.DisplayFor(modelItem => item.Day.Name)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Group.Name)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

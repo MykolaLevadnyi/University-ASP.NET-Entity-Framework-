@@ -1,0 +1,30 @@
+﻿@model IEnumerable<University_MVC_.Shedule>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Розклад групи @ViewBag.GroupName</h1>
+
+<p>
+    @Html.ActionLink("Створити новий розклад", "Create", new { Id = @ViewBag.GroupId , Name = ViewBag.GroupName})
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Виберіть день:
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="ShowLessons" asp-route-id="@item.Id"> @Html.DisplayFor(modelItem => item.Day.Name)</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

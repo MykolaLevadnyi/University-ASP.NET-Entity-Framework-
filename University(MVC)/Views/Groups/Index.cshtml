@@ -1,0 +1,50 @@
+﻿@model IEnumerable<University_MVC_.Groups>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Групи</h1>
+
+<p>
+    <a asp-action="Create">Створити нову групу</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassPr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClassPr.Name)
+                @Html.DisplayFor(modelItem => item.ClassPr.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department.Name)
+            </td>
+            <td>
+
+                <a asp-action="Shedule" asp-route-id="@item.Id">Розклад</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Студенти</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
