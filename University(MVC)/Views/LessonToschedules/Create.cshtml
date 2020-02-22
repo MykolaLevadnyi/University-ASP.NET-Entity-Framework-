@@ -4,21 +4,21 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+    <h1>Додавання пари @ViewBag.SheduleId</h1>
 
-<h4>LessonToschedule</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" value="@ViewBag.SheduleId" name="ScheduleId" />
+
             <div class="form-group">
-                <label asp-for="ScheduleId" class="control-label"></label>
-                <select asp-for="ScheduleId" class ="form-control" asp-items="ViewBag.ScheduleId"></select>
-            </div>
-            <div class="form-group">
+
                 <label asp-for="LessonId" class="control-label"></label>
-                <select asp-for="LessonId" class ="form-control" asp-items="ViewBag.LessonId"></select>
+                <select asp-for="LessonId" class="form-control" asp-items="ViewBag.LessonId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Num" class="control-label"></label>
@@ -26,14 +26,14 @@
                 <span asp-validation-for="Num" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Зберегти зміни" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Повернутися до списку","Index", new {id= ViewBag.SheduleId })
 </div>
 
 @section Scripts {

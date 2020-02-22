@@ -138,7 +138,38 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
+
             var deparments = await _context.Deparments.FindAsync(id);
+            List<long?> groupsid = new List<long?>();
+            foreach(var s in _context.Groups)
+            {
+                if (s.DepartmentId == id) groupsid.Add(s.Id);
+            }
+            var students = from s in _context.Students
+                           where groupsid.Contains(s.GroupId)
+                           select s;
+            var groups = from g in _context.Groups
+                         where g.DepartmentId == id
+                         select g;
+            foreach(var g in groups)
+            {
+                g.ClassPrId = null;
+            }
+            foreach(var g in groups)
+            {
+                _context.Groups.Update(g);
+            }
+            await _context.SaveChangesAsync();
+            foreach (var s in students)
+            {
+                _context.Students.Remove(s);
+            }
+            await _context.SaveChangesAsync();
+            foreach (var g in groups)
+            {
+                _context.Groups.Remove(g);
+            }
+            await _context.SaveChangesAsync();
             _context.Deparments.Remove(deparments);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

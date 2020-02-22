@@ -17,7 +17,7 @@ namespace University_MVC_
         public long DayId { get; set; }
         [Display(Name = "Група")]
         [Required(ErrorMessage = "Поле не може бути порожнім")]
-        public long GroupId { get; set; }
+        public long? GroupId { get; set; }
 
         public virtual Days Day { get; set; }
         public virtual Groups Group { get; set; }

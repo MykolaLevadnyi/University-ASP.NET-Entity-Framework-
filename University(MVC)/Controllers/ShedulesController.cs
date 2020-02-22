@@ -64,17 +64,17 @@ namespace University_MVC_.Controllers
         }
 
         // GET: Shedules/Create
-        public IActionResult Create(long id, string name)
+        public IActionResult Create(long? id,string name)
         {
-            ViewBag.Group = id;
+            ViewBag.GroupId = id;
             ViewBag.GroupN = name;
+            //ViewBag.GroupN = name;
             var cdays = _context.Shedule.Where(s => s.GroupId == id).Select(d => d.Day);
             var days = from day in _context.Days
                         where !cdays.Contains(day)
                         select day;
 
             ViewData["DayId"] = new SelectList(days/*_context.Days*/, "Id", "Name");
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name");
             return View();
         }
 
@@ -83,20 +83,18 @@ namespace University_MVC_.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(long groupId, string  name, [Bind("Id,DayId")] Shedule shedule)
+        public async Task<IActionResult> Create(long? groupId, [Bind("Id,DayId")] Shedule shedule)
         {
             shedule.GroupId = groupId;
-            ViewBag.Group = groupId;
-            ViewBag.GroupN = name;
             if (ModelState.IsValid)
             {
                 _context.Add(shedule);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { id = groupId, name = _context.Groups.Where(g => g.Id == groupId).FirstOrDefault().Name });
+                //  return RedirectToAction(nameof(Index));
             }
             ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", shedule.DayId);
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", shedule.GroupId);
-            return View(shedule);
+            return RedirectToAction("Index", new {id=groupId,name= _context.Groups.Where(g=>g.Id==groupId).FirstOrDefault().Name });
         }
 
         // GET: Shedules/Edit/5

@@ -7,7 +7,7 @@ namespace University_MVC_
     public partial class LessonToschedule
     {
         public long Id { get; set; }
-        [Required(ErrorMessage = "Поле не може бути порожнім")]
+        //[Required(ErrorMessage = "Поле не може бути порожнім")]
         public long ScheduleId { get; set; }
         [Display(Name = "Назва Предмету")]
         [Required(ErrorMessage = "Поле не може бути порожнім")]

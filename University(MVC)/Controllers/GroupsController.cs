@@ -80,16 +80,24 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,ClassPrId,DepartmentId")] Groups groups)
         {
-
-            if (ModelState.IsValid)
-            {
+            
+            if (ModelState.IsValid && groups.Name.Length==3) {
+  
                 _context.Add(groups);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                for (int i = 1; i < 8; i++)
+                {
+                    Shedule shedule = new Shedule();
+                    shedule.DayId = i;
+                    shedule.GroupId = groups.Id;
+                    _context.Shedule.Add(shedule);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction("Index");
+                // return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassPrId"] = new SelectList(_context.Students, "Id", "Name", groups.ClassPrId);
-            ViewData["DepartmentId"] = new SelectList(_context.Deparments, "Id", "Name", groups.DepartmentId);
-            return View(groups);
+            return RedirectToAction("Index");
         }
 
         // GET: Groups/Edit/5
@@ -106,6 +114,7 @@ namespace University_MVC_.Controllers
                 return NotFound();
             }
             ViewData["ClassPrId"] = new SelectList(_context.Students.Where(g => g.GroupId == groups.Id), "Id", "Name", groups.ClassPrId);
+            //ViewData["ClassPrId"] = new SelectList(students, "Id", "Name", groups.ClassPrId);
             ViewData["DepartmentId"] = new SelectList(_context.Deparments, "Id", "Name", groups.DepartmentId);
             return View(groups);
         }
@@ -122,8 +131,6 @@ namespace University_MVC_.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
                 try
                 {
                     _context.Update(groups);
@@ -140,11 +147,12 @@ namespace University_MVC_.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            } 
+                //return RedirectToAction(nameof(Index));
+            
             ViewData["ClassPrId"] = new SelectList(_context.Students.Where(g => g.GroupId == groups.Id), "Id", "Name", groups.ClassPrId);
             ViewData["DepartmentId"] = new SelectList(_context.Deparments, "Id", "Name", groups.DepartmentId);
-            return View(groups);
+            //return View(groups);
+            return RedirectToAction("Index", "Groups");
         }
 
         // GET: Groups/Delete/5
@@ -156,7 +164,6 @@ namespace University_MVC_.Controllers
             }
 
             var groups = await _context.Groups
-                .Include(g => g.ClassPr)
                 .Include(g => g.Department)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (groups == null)
@@ -173,6 +180,42 @@ namespace University_MVC_.Controllers
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var groups = await _context.Groups.FindAsync(id);
+            //Students delete
+            groups.ClassPrId = null;
+            _context.Groups.Update(groups);
+            var students = from s in _context.Students
+                           where s.GroupId == id
+                           select s;
+            foreach (var s in students)
+            {
+                _context.Students.Remove(s);
+            }
+
+            await _context.SaveChangesAsync();
+            //LessonToShcedules delete
+            List<long?> l_t_s = new List<long?>();
+            foreach(var s in _context.Shedule)
+            {
+                if (s.GroupId == id) { l_t_s.Add(s.Id); }
+            }
+            var lessondtoschedule = from lts in _context.LessonToschedule
+                                    where l_t_s.Contains(lts.ScheduleId)
+                                    select lts;
+            foreach(var lts in lessondtoschedule)
+            {
+                _context.LessonToschedule.Remove(lts);
+            }
+            await _context.SaveChangesAsync();
+            //Shcdules delete
+            var shedules = from s in _context.Shedule
+                           where s.GroupId == id
+                           select s;
+            foreach(var s in shedules)
+            {
+                _context.Shedule.Remove(s);
+            }
+            await _context.SaveChangesAsync();
+            //Group delete
             _context.Groups.Remove(groups);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

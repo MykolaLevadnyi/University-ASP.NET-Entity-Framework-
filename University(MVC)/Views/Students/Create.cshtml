@@ -24,8 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Gender" class="control-label"></label>
-                <input asp-for="Gender" class="form-control" />
-                <span asp-validation-for="Gender" class="text-danger"></span>
+                <select asp-for="Gender" class="form-control" asp-items="ViewBag.Gender"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Birthday" class="control-label"></label>
@@ -43,7 +42,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Повернутися до списку","Index", new { id = ViewBag.GroupId , name = ViewBag.GroupName })
 </div>
 
 @section Scripts {

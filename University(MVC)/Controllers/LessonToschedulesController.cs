@@ -21,6 +21,7 @@ namespace University_MVC_.Controllers
         // GET: LessonToschedules
         public async Task<IActionResult> Index(int? id)
         {
+            ViewBag.SheduleId = id;
             var universityContext = _context.LessonToschedule.Where(s=>s.ScheduleId==id).Include(l => l.Lesson);
             return View(await universityContext.ToListAsync());
         }
@@ -46,10 +47,10 @@ namespace University_MVC_.Controllers
         }
 
         // GET: LessonToschedules/Create
-        public IActionResult Create()
+        public IActionResult Create(int? Id)
         {
-            ViewData["LessonId"] = new SelectList(_context.Lessons, "Id", "Id");
-            ViewData["ScheduleId"] = new SelectList(_context.Shedule, "Id", "Id");
+            ViewBag.SheduleId = Id;
+            ViewData["LessonId"] = new SelectList(_context.Lessons, "Id", "Name");
             return View();
         }
 
@@ -58,22 +59,27 @@ namespace University_MVC_.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ScheduleId,LessonId,Num")] LessonToschedule lessonToschedule)
+        public async Task<IActionResult> Create(int ScheduleId, [Bind("Id,LessonId,Num")] LessonToschedule lessonToschedule)
         {
+            LessonToschedule lts = new LessonToschedule();
+            lts.LessonId = lessonToschedule.LessonId;
+            lessonToschedule.ScheduleId = ScheduleId;
+            lts.ScheduleId = ScheduleId;
+            lts.Num = lessonToschedule.Num;
             if (ModelState.IsValid)
             {
-                _context.Add(lessonToschedule);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            _context.Add(lts);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", new { id = ScheduleId });
             }
             ViewData["LessonId"] = new SelectList(_context.Lessons, "Id", "Name", lessonToschedule.LessonId);
-            ViewData["ScheduleId"] = new SelectList(_context.Shedule, "Id", "Id", lessonToschedule.ScheduleId);
-            return View(lessonToschedule);
+            return RedirectToAction("Index", new { id = ScheduleId });
         }
 
         // GET: LessonToschedules/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(long? id,long? sheduleId)
         {
+       
             if (id == null)
             {
                 return NotFound();
@@ -84,8 +90,8 @@ namespace University_MVC_.Controllers
             {
                 return NotFound();
             }
+            ViewBag.SheduleId = sheduleId;
             ViewData["LessonId"] = new SelectList(_context.Lessons, "Id", "Name", lessonToschedule.LessonId);
-            ViewData["ScheduleId"] = new SelectList(_context.Shedule, "Id", "Id", lessonToschedule.ScheduleId);
             return View(lessonToschedule);
         }
 
@@ -94,15 +100,14 @@ namespace University_MVC_.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,ScheduleId,LessonId,Num")] LessonToschedule lessonToschedule)
+        public async Task<IActionResult> Edit(long id,[Bind("Id,ScheduleId,LessonId,Num")] LessonToschedule lessonToschedule)
         {
             if (id != lessonToschedule.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
-            {
+           // if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(lessonToschedule);
@@ -119,11 +124,10 @@ namespace University_MVC_.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
+               // return RedirectToAction(nameof(Index));
+            //}
             ViewData["LessonId"] = new SelectList(_context.Lessons, "Id", "Id", lessonToschedule.LessonId);
-            ViewData["ScheduleId"] = new SelectList(_context.Shedule, "Id", "Id", lessonToschedule.ScheduleId);
-            return View(lessonToschedule);
+            return RedirectToAction("Index",new {id=_context.LessonToschedule.Where(s=>s.Id==id).FirstOrDefault().ScheduleId });
         }
 
         // GET: LessonToschedules/Delete/5
@@ -149,12 +153,13 @@ namespace University_MVC_.Controllers
         // POST: LessonToschedules/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(long? id)
         {
+            var s = _context.LessonToschedule.Where(s => s.Id == id).FirstOrDefault().ScheduleId;
             var lessonToschedule = await _context.LessonToschedule.FindAsync(id);
             _context.LessonToschedule.Remove(lessonToschedule);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", new { id = s });
         }
 
         private bool LessonToscheduleExists(long id)

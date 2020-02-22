@@ -25,10 +25,8 @@ namespace University_MVC_
         [Required(ErrorMessage = "Поле не може бути порожнім")]
         public DateTime? Birthday { get; set; }
         [Display(Name = "Назва групи")]
-        [Required(ErrorMessage = "Поле не може бути порожнім")]
         public long? GroupId { get; set; }
         [Display(Name = "Назва групи")]
-        [Required(ErrorMessage = "Поле не може бути порожнім")]
         public virtual Groups Group { get; set; }
         public virtual ICollection<Groups> Groups { get; set; }
     }

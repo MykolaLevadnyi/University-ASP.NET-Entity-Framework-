@@ -4,11 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Предмети</h1>
+    <h1>Предмети</h1>
 
-<p>
-    <a asp-action="Create">Додати новий</a>
-</p>
+    <p>
+        @Html.ActionLink("Додати пару", "Create", new {Id = ViewBag.SheduleId })
+    </p>
 <table class="table">
     <thead>
         <tr>
@@ -31,7 +31,8 @@
                 @Html.DisplayFor(modelItem => item.Lesson.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |
+                <!--<a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |-->
+                @Html.ActionLink("Редагування", "Edit", new { id = item.Id , sheduleId = ViewBag.SheduleId })
                 <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
             </td>
         </tr>

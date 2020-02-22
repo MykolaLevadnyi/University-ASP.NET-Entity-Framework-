@@ -79,13 +79,14 @@ namespace University_MVC_.Controllers
             //ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", student.GroupId);
             //return View(student);
             var Genders = new List<string> { "Male", "Female" };
-            ViewData["Gender"] = new SelectList(Genders, "Id", "Name");
+            ViewData["Gender"] = new SelectList(Genders);
             return RedirectToAction("Index", "Students", new { id = groupId, name = _context.Groups.Where(g => g.Id == groupId).FirstOrDefault().Name });
         }
 
         // GET: Students/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(long? id,long? groupId)
         {
+            ViewBag.GroupId = groupId;
             if (id == null)
             {
                 return NotFound();
@@ -97,8 +98,7 @@ namespace University_MVC_.Controllers
                 return NotFound();
             }
             var Genders = new List<string> { "Male", "Female" };
-            ViewData["Gender"] = new SelectList(Genders, "Id", "Name", students.GroupId);
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", students.GroupId);
+            ViewData["Gender"] = new SelectList(Genders);
             return View(students);
         }
 
@@ -107,8 +107,9 @@ namespace University_MVC_.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Surname,Gender,Birthday,GroupId")] Students students)
+        public async Task<IActionResult> Edit(long id, long? groupid, [Bind("Id,Name,Surname,Gender,Birthday")] Students students)
         {
+            students.GroupId = groupid;
             if (id != students.Id)
             {
                 return NotFound();
@@ -132,12 +133,13 @@ namespace University_MVC_.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Index", new { id = groupid, name = _context.Groups.Where(g => g.Id == groupid).FirstOrDefault().Name });
             }
             var Genders = new List<string> { "Male", "Female" };
             ViewData["Gender"] = new SelectList(Genders);
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", students.GroupId);
-            return View(students);
+            ViewData["GroupId"] = new SelectList(_context.Groups);
+            return RedirectToAction("Index", new {id =groupid,name=_context.Groups.Where(g=>g.Id==groupid).FirstOrDefault().Name });
         }
 
         // GET: Students/Delete/5
@@ -165,6 +167,10 @@ namespace University_MVC_.Controllers
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var students = await _context.Students.FindAsync(id);
+            var groups =await _context.Groups
+                .Where(p => p.ClassPrId == id).FirstOrDefaultAsync();
+            groups.ClassPrId = null;
+            _context.Groups.Update(groups);
             _context.Students.Remove(students);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

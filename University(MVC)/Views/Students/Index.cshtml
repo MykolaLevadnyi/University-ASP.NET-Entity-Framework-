@@ -47,8 +47,8 @@
                 </td>
 
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @Html.ActionLink("Редагування", "Edit", new { id=item.Id , groupId = ViewBag.GroupId }) |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
                 </td>
             </tr>
         }
