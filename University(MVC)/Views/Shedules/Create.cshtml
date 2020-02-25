@@ -28,7 +28,7 @@
 </div>
 
 <div>
-    @Html.ActionLink("Повернутися до списку", "Index", new { Id = @ViewBag.GroupId ,name=@ViewBag.GroupN })
+    <a href='javascript:history.go(-1)'>Повернутися до списку</a>
 </div>
 
 @section Scripts {
