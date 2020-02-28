@@ -3,15 +3,42 @@
 @{
     ViewData["Title"] = "Index";
 }
+@{
+    if (ViewBag.Error != null)
+    {
+    <div class="alert alert-dismissible alert-secondary">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong class="text-center">@ViewBag.Error</strong>
+    </div>
+    }
+}
 
+<head>
+    <style>
+        body {
+            background-image: url('images/109970nibcrikyl8kn5m5w4on5.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
 
-<h1>Групи</h1>
+        .bg-mydark {
+            opacity: 0.8;
+        }
 
-<p>
-    <a asp-action="Create">Створити нову групу</a>
-</p>
-<table class="table">
-    <thead>
+        .text-mybright {
+            opacity: 1;
+            color: black;
+        }
+    </style>
+</head>
+<div class="bg-light text-center bg-mydark">
+    <h1 class="text-center text-mybright">Групи</h1>
+    <p class="text-center text-mybright">
+        <a asp-action="Create">Створити нову групу</a>
+    </p>
+</div>
+<table class="table jumbotron bg-mydark">
+    <thead class="text-mybright">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -25,7 +52,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-mybright">
         @foreach (var item in Model)
         {
             <tr>

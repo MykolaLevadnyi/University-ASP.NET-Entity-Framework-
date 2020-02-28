@@ -3,39 +3,71 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-    <h1>Предмети</h1>
-
-    <p>
-        @Html.ActionLink("Додати пару", "Create", new {Id = ViewBag.SheduleId })
-    </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Num)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lesson)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Num)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lesson.Name)
-            </td>
-            <td>
-                <!--<a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |-->
-                @Html.ActionLink("Редагування", "Edit", new { id = item.Id , sheduleId = ViewBag.SheduleId })
-                <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
-            </td>
-        </tr>
+@{
+    if (ViewBag.Error != null)
+    {
+        <div class="alert alert-dismissible alert-secondary">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong class="text-center">@ViewBag.Error</strong>
+        </div>
+    }
 }
-    </tbody>
-</table>
+<head>
+    <style>
+        body {
+            background-image: url(https://p4.wallpaperbetter.com/wallpaper/670/883/685/plexus-atoms-neutrons-electrons-wallpaper-79a0785d113a8d2b6647683f10e1068d.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .bg-mydark {
+            opacity: 0.8;
+        }
+
+        .text-mybright {
+            opacity: 1;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-light text-center bg-mydark">
+        <h1 class="text-center text-mybright">Предмети</h1>
+
+        <p class="text-center text-mybright">
+            @Html.ActionLink("Додати пару", "Create", new { Id = ViewBag.SheduleId })
+        </p>
+    </div>
+    <table class="table jumbotron bg-mydark">
+        <thead class="text-mybright">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Num)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LessonId)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="text-mybright">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Num)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Lesson.Name)
+                    </td>
+                    <td>
+                        <!--<a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |-->
+                        @Html.ActionLink("Редагування", "Edit", new { id = item.Id, sheduleId = ViewBag.SheduleId })
+                        <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>

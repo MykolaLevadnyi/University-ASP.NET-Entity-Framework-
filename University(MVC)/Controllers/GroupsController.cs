@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using University_MVC_;
+using System.Web;
 
 namespace University_MVC_.Controllers
 {
@@ -25,8 +26,9 @@ namespace University_MVC_.Controllers
             return View(await universityContext.ToListAsync());
         }
         // GET: Groups
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string error)
         {
+            ViewBag.Error = error;
             var universityContext = _context.Groups.Include(g => g.ClassPr).Include(g => g.Department);
             return View(await universityContext.ToListAsync());
         }
@@ -80,8 +82,10 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,ClassPrId,DepartmentId")] Groups groups)
         {
+            var names = from g in _context.Groups
+                        select g.Name;
             
-            if (ModelState.IsValid && groups.Name.Length==3) {
+            if (ModelState.IsValid && groups.Name.Length==3 && !names.Contains(groups.Name)) {
   
                 _context.Add(groups);
                 await _context.SaveChangesAsync();
@@ -97,7 +101,8 @@ namespace University_MVC_.Controllers
                 return RedirectToAction("Index");
                 // return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction("Index");
+           
+            return RedirectToAction("Index", new { error = "Не створено" });
         }
 
         // GET: Groups/Edit/5
@@ -126,11 +131,14 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Name,ClassPrId,DepartmentId")] Groups groups)
         {
+            var names = from g in _context.Groups
+                        select g.Name;
             if (id != groups.Id)
             {
                 return NotFound();
             }
-
+            if (ModelState.IsValid && groups.Name.Length == 3 && !names.Contains(groups.Name))
+            {
                 try
                 {
                     _context.Update(groups);
@@ -147,12 +155,13 @@ namespace University_MVC_.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Groups");
+            }
             
             ViewData["ClassPrId"] = new SelectList(_context.Students.Where(g => g.GroupId == groups.Id), "Id", "Name", groups.ClassPrId);
             ViewData["DepartmentId"] = new SelectList(_context.Deparments, "Id", "Name", groups.DepartmentId);
             //return View(groups);
-            return RedirectToAction("Index", "Groups");
+            return RedirectToAction("Index", "Groups" , new { error = "Помилка редагування" });
         }
 
         // GET: Groups/Delete/5

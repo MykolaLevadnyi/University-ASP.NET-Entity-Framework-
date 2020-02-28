@@ -167,13 +167,18 @@ namespace University_MVC_.Controllers
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var students = await _context.Students.FindAsync(id);
+            var Id = students.GroupId;
+            var Name = _context.Groups.Where(g => g.Id == Id).FirstOrDefault().Name;
             var groups =await _context.Groups
                 .Where(p => p.ClassPrId == id).FirstOrDefaultAsync();
-            groups.ClassPrId = null;
-            _context.Groups.Update(groups);
+            if (groups != null)
+            {
+                groups.ClassPrId = null;
+                _context.Groups.Update(groups);
+            }
             _context.Students.Remove(students);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index",new { id = Id, name = Name });
         }
 
         private bool StudentsExists(long id)

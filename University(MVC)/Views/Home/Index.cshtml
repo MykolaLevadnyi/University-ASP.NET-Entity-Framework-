@@ -1,25 +1,48 @@
 ﻿@{
     ViewData["Title"] = "Домашня сторінка";
 }
+    <!DOCTYPE html>
+    <html>
+    <head>
+         <style>
+             body {
+                 background-image: url('../images/imgonline-com-ua-resize-r0b7qooitpcrvu3r.png');
+                 background-size: cover;
+                 background-repeat: no-repeat;
+             }
+         .bg-mydark{
+             opacity:0.8;
 
-<div class="jumbotron">
-    <h1>University</h1>
-</div>
-<p>
-    <a asp-controller="Groups" asp-action="Index">Groups</a> |
-    <a asp-controller="Deparments" asp-action="Index">Departments</a> |
-    <!--   <a asp-controller="Shedules" asp-action="Indexx">Shedules</a> |-->
-    <a asp-controller="Lessons" asp-action="Index">Lessons</a>
-</p>
-<div class="row">
-    <div class="col-md-4">
-        <h2>Ласкаво просимо до сторінки роботи з данними університету</h2>
+         }
+         .text-mybright{
+             opacity:1;
+             color:black;
+         }
+         .myl{
+             left:15px;
+         }
+     </style>
+    </head>
+    <body class="mybody">
+        <div class="jumbotron bg-mydark">
+            <h1 class="text-mybright">University</h1>
+        </div>
         <p>
-            Це надзвичайна сторінка, яка допоможе
-            абсолютно безболісно
-            насолодитись кращим універсітетом в світі.
+            <button class="btn btn-secondary bg-mydark" onclick="location.href = '@Url.Action("Index", "Groups")'">Groups</button>
+            <button class="btn btn-secondary bg-mydark" onclick="location.href = '@Url.Action("Index", "Deparments")'">Departments</button>
+            <button class="btn btn-secondary bg-mydark" onclick="location.href = '@Url.Action("Index", "Lessons")'">Lessons</button>
         </p>
-    </div>
-</div>
+        <div class="row">
+            <div class="col-md-4 myl jumbotron bg-mydark">
+                    <h2 class="text-mybright">Ласкаво просимо до сторінки роботи з данними університету</h2>
+                    <p class="text-mybright">
+                        Це надзвичайна сторінка, яка допоможе
+                        абсолютно безболісно
+                        насолодитись кращим універсітетом в світі.
+                    </p>
+            </div>
+        </div>
 
-<marquee behavior="alternate" direction="right">KILL ME PLS</marquee>
+        <marquee behavior="alternate" direction="right">KILL ME PLS</marquee>
+    </body>
+    </html>

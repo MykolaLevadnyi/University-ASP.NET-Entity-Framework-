@@ -3,14 +3,31 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Предмети</h1>
-
-<p>
-    <a asp-action="Create">Додати новий предмет</a>
-</p>
-<table class="table">
-    <thead>
+    <head>
+        <style>
+            body {
+         
+                background-image: url('images/imgonline-com-ua-resize-dn19dkz8x2ke.png');
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+            .bg-mydark {
+                opacity: 0.8;
+            }
+            .text-mybright {
+                opacity: 1;
+                color: black;
+            }
+        </style>
+    </head>
+ <div class="bg-light text-center bg-mydark">
+        <h1 class="text-center text-mybright">Предмети</h1>
+        <p class="text-center text-mybright">
+            <a asp-action="Create">Додати новий предмет</a>
+        </p>
+    </div>
+<table class="table jumbotron bg-mydark">
+    <thead class="text-mybright">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -18,17 +35,18 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
-            </td>
-        </tr>
-}
+    <tbody class="text-mybright">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -4,13 +4,33 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Кафедри</h1>
+<head>
+    <style>
+        body {
+            background-image: url('images/wallpaperflare.com_wallpaper.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
 
-<p>
-    <a asp-action="Create">Створити нову кафедру</a>
-</p>
-<table class="table">
-    <thead>
+        .bg-mydark {
+            opacity: 0.8;
+        }
+
+        .text-mybright {
+            opacity: 1;
+            color: black;
+        }
+    </style>
+</head>
+<div class="bg-light text-center bg-mydark">
+    <h1 class="text-center text-mybright">Кафедри</h1>
+
+    <p class="text-center text-mybright">
+        <a asp-action="Create">Створити нову кафедру</a>
+    </p>
+</div>
+<table class="table jumbotron bg-mydark">
+    <thead class="text-mybright">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -18,18 +38,19 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Групи</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
-            </td>
-        </tr>
-}
+    <tbody class="text-mybright">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Групи</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

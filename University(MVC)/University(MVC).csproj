@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\University%2528MVC%2529\University%2528MVC%2529\wwwroot\lib\bootstrap\dist\Images\109970niBCRIKyL8kn5M5w4ON5.jpg" />
+    <None Include="..\..\University%2528MVC%2529\University%2528MVC%2529\wwwroot\lib\bootstrap\dist\Images\cosmos.png" />
+    <None Include="..\..\University%2528MVC%2529\University%2528MVC%2529\wwwroot\lib\bootstrap\dist\Images\IMG_20191224_105216.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

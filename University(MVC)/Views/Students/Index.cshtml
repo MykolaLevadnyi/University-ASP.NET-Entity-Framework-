@@ -3,54 +3,73 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Студенти за групою @ViewBag.GroupName</h1>
-
-<p>
-    @Html.ActionLink("Додати нового студента", "Create", new { groupId = ViewBag.GroupId })
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Birthday)
-            </th>
-
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                @{ string birth = item.Birthday.ToString().Substring(0, item.Birthday.ToString().Length - 7);}
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Surname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Gender)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => birth)
-                </td>
-
-                <td>
-                    @Html.ActionLink("Редагування", "Edit", new { id=item.Id , groupId = ViewBag.GroupId }) |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
-                </td>
-            </tr>
+<head>
+    <style>
+        body {
+            background-image: url(https://p4.wallpaperbetter.com/wallpaper/580/900/864/geometry-cyberspace-digital-art-blue-wallpaper-a960de2a3cb2969a90cf35a579170a5b.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
         }
-    </tbody>
-</table>
+
+        .bg-mydark {
+            opacity: 0.8;
+        }
+
+        .text-mybright {
+            opacity: 1;
+            color: black;
+        }
+    </style>
+</head>
+<div class="bg-light text-center bg-mydark">
+    <h1 class="text-center text-mybright">Студенти за групою @ViewBag.GroupName</h1>
+
+    <p class="text-center text-mybright">
+        @Html.ActionLink("Додати нового студента", "Create", new { groupId = ViewBag.GroupId })
+    </p>
+    </div>
+    <table class="table jumbotron bg-mydark">
+        <thead class="text-mybright">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Surname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Birthday)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="text-mybright">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @{ string birth = item.Birthday.ToString().Substring(0, item.Birthday.ToString().Length - 7);}
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => birth)
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Редагування", "Edit", new { id = item.Id, groupId = ViewBag.GroupId }) |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

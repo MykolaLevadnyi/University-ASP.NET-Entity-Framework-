@@ -19,8 +19,9 @@ namespace University_MVC_.Controllers
         }
 
         // GET: LessonToschedules
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(int? id,string error)
         {
+            ViewBag.Error = error;
             ViewBag.SheduleId = id;
             var universityContext = _context.LessonToschedule.Where(s=>s.ScheduleId==id).Include(l => l.Lesson);
             return View(await universityContext.ToListAsync());
@@ -66,14 +67,18 @@ namespace University_MVC_.Controllers
             lessonToschedule.ScheduleId = ScheduleId;
             lts.ScheduleId = ScheduleId;
             lts.Num = lessonToschedule.Num;
-            if (ModelState.IsValid)
+            // CHECK LESSONS FOR UNIQUENESS
+            var lessons = from l in _context.LessonToschedule
+                          where l.ScheduleId == ScheduleId
+                          select l.LessonId;
+
+            if (ModelState.IsValid && !lessons.Contains(lessonToschedule.LessonId))
             {
             _context.Add(lts);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", new { id = ScheduleId });
             }
-            ViewData["LessonId"] = new SelectList(_context.Lessons, "Id", "Name", lessonToschedule.LessonId);
-            return RedirectToAction("Index", new { id = ScheduleId });
+            return RedirectToAction("Index", new { id = ScheduleId , error="Не створено"});
         }
 
         // GET: LessonToschedules/Edit/5
@@ -102,12 +107,17 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id,[Bind("Id,ScheduleId,LessonId,Num")] LessonToschedule lessonToschedule)
         {
+            // CHECK LESSONS FOR UNIQUENESS
+            var lessons = from l in _context.LessonToschedule
+                          where l.ScheduleId == lessonToschedule.ScheduleId
+                          select l.LessonId;
+
             if (id != lessonToschedule.Id)
             {
                 return NotFound();
             }
-           // if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid && !lessons.Contains(lessonToschedule.LessonId))
+            {
                 try
                 {
                     _context.Update(lessonToschedule);
@@ -124,10 +134,9 @@ namespace University_MVC_.Controllers
                         throw;
                     }
                 }
-               // return RedirectToAction(nameof(Index));
-            //}
-            ViewData["LessonId"] = new SelectList(_context.Lessons, "Id", "Id", lessonToschedule.LessonId);
-            return RedirectToAction("Index",new {id=_context.LessonToschedule.Where(s=>s.Id==id).FirstOrDefault().ScheduleId });
+                return RedirectToAction("Index", new { id = _context.LessonToschedule.Where(s => s.Id == id).FirstOrDefault().ScheduleId });
+            }
+            return RedirectToAction("Index",new {id=_context.LessonToschedule.Where(s=>s.Id==id).FirstOrDefault().ScheduleId , error = "Помилка редагування" });
         }
 
         // GET: LessonToschedules/Delete/5
