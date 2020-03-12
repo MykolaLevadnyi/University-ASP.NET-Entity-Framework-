@@ -71,8 +71,12 @@ namespace University_MVC_.Controllers
             var lessons = from l in _context.LessonToschedule
                           where l.ScheduleId == ScheduleId
                           select l.LessonId;
+            // CHECK LESSONS_NUM FOR UNIQUENESS
 
-            if (ModelState.IsValid && !lessons.Contains(lessonToschedule.LessonId))
+            var l_nums = from l in _context.LessonToschedule
+                         where l.ScheduleId == ScheduleId
+                         select l.Num;
+            if (ModelState.IsValid && !lessons.Contains(lessonToschedule.LessonId) && !l_nums.Contains(lessonToschedule.Num) && lessonToschedule.Num>0)
             {
             _context.Add(lts);
             await _context.SaveChangesAsync();
@@ -107,16 +111,22 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id,[Bind("Id,ScheduleId,LessonId,Num")] LessonToschedule lessonToschedule)
         {
-            // CHECK LESSONS FOR UNIQUENESS
-            var lessons = from l in _context.LessonToschedule
-                          where l.ScheduleId == lessonToschedule.ScheduleId
-                          select l.LessonId;
+            // CHECK LESSONS_NUM FOR UNIQUENESS
 
+            var l_nums = (from l in _context.LessonToschedule
+                         where l.ScheduleId == lessonToschedule.ScheduleId
+                         select l.Num).ToList();
+
+            if(l_nums.Contains(lessonToschedule.Num))
+            {
+                ModelState.AddModelError("Num", "This num is incorect");
+                return View(lessonToschedule);
+            }
             if (id != lessonToschedule.Id)
             {
                 return NotFound();
             }
-            if (ModelState.IsValid && !lessons.Contains(lessonToschedule.LessonId))
+            if (ModelState.IsValid && !l_nums.Contains(lessonToschedule.Num) && lessonToschedule.Num > 0)
             {
                 try
                 {

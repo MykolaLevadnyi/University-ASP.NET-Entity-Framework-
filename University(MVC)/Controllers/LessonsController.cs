@@ -19,8 +19,9 @@ namespace University_MVC_.Controllers
         }
 
         // GET: Lessons
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string error)
         {
+            ViewBag.Error = error;
             return View(await _context.Lessons.ToListAsync());
         }
 
@@ -55,13 +56,20 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Lessons lessons)
         {
-            if (ModelState.IsValid)
+            var l_names = from l in _context.Lessons
+                          select l.Name;
+            if (l_names.Contains(lessons.Name))
+            {
+                ModelState.AddModelError("Name", "This name is already exist");
+                return View(lessons);
+            }
+            if (ModelState.IsValid && !l_names.Contains(lessons.Name))
             {
                 _context.Add(lessons);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(lessons);
+            return RedirectToAction("Index", new { error = "Не створено" });
         }
 
         // GET: Lessons/Edit/5
@@ -87,12 +95,19 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Name")] Lessons lessons)
         {
+            var l_names = from l in _context.Lessons
+                          select l.Name;
+            if (l_names.Contains(lessons.Name))
+            {
+                ModelState.AddModelError("Name", "This name is already exist");
+                return View(lessons);
+            }
             if (id != lessons.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !l_names.Contains(lessons.Name))
             {
                 try
                 {
@@ -112,7 +127,7 @@ namespace University_MVC_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(lessons);
+            return RedirectToAction("Index", new { error = "Не редаговано" });
         }
 
         // GET: Lessons/Delete/5

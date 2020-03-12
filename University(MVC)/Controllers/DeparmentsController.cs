@@ -19,8 +19,9 @@ namespace University_MVC_.Controllers
         }
 
         // GET: Deparments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string error)
         {
+            ViewBag.Error = error;
             return View(await _context.Deparments.ToListAsync());
         }
 
@@ -55,13 +56,21 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Deparments deparments)
         {
-            if (ModelState.IsValid)
+            var dep_name = from d in _context.Deparments
+                           select d.Name;
+            if (dep_name.Contains(deparments.Name))
+            {
+                ModelState.AddModelError("Name","This name is already exist");
+                return View(deparments);
+            }
+            if (ModelState.IsValid && !dep_name.Contains(deparments.Name))
             {
                 _context.Add(deparments);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(deparments);
+
+            return RedirectToAction("Index", new { error = "Не створено" });
         }
 
         // GET: Deparments/Edit/5
@@ -87,12 +96,19 @@ namespace University_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Name")] Deparments deparments)
         {
+            var dep_name = from d in _context.Deparments
+                           select d.Name;
+            if (dep_name.Contains(deparments.Name))
+            {
+                ModelState.AddModelError("Name", "This name is already exist");
+                return View(deparments);
+            }
             if (id != deparments.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !dep_name.Contains(deparments.Name))
             {
                 try
                 {
@@ -112,7 +128,7 @@ namespace University_MVC_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(deparments);
+            return RedirectToAction("Index", new { error = "Не редаговано" });
         }
 
         // GET: Deparments/Delete/5

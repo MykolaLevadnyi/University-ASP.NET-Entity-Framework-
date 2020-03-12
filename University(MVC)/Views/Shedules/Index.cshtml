@@ -27,24 +27,25 @@
     <p>
         <!-- @Html.ActionLink("Створити новий розклад", "Create", new { Id = @ViewBag.GroupId , Name = ViewBag.GroupName})-->
     </p>
-    </div>
-    <table class="table jumbotron bg-mydark">
-        <thead class="text-mybright">
+</div>
+<table class="table jumbotron bg-mydark">
+    <thead class="text-mybright">
+        <tr>
+            <th>
+                Виберіть день:
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="text-mybright">
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>
-                    Виберіть день:
-                </th>
-                <th></th>
+                <td>
+                    <a asp-action="ShowLessons" asp-route-id="@item.Id"> @Html.DisplayFor(modelItem => item.Day.Name)</a>
+                </td>
             </tr>
-        </thead>
-        <tbody class="text-mybright">
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        <a asp-action="ShowLessons" asp-route-id="@item.Id"> @Html.DisplayFor(modelItem => item.Day.Name)</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
+

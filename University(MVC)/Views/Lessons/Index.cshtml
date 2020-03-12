@@ -3,29 +3,40 @@
 @{
     ViewData["Title"] = "Index";
 }
-    <head>
-        <style>
-            body {
-         
-                background-image: url('images/imgonline-com-ua-resize-dn19dkz8x2ke.png');
-                background-size: cover;
-                background-repeat: no-repeat;
-            }
-            .bg-mydark {
-                opacity: 0.8;
-            }
-            .text-mybright {
-                opacity: 1;
-                color: black;
-            }
-        </style>
-    </head>
- <div class="bg-light text-center bg-mydark">
-        <h1 class="text-center text-mybright">Предмети</h1>
-        <p class="text-center text-mybright">
-            <a asp-action="Create">Додати новий предмет</a>
-        </p>
-    </div>
+@{
+    if (ViewBag.Error != null)
+    {
+        <div class="alert alert-dismissible alert-secondary">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong class="text-center">@ViewBag.Error</strong>
+        </div>
+    }
+}
+
+<head>
+    <style>
+        body {
+            background-image: url('images/imgonline-com-ua-resize-dn19dkz8x2ke.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .bg-mydark {
+            opacity: 0.8;
+        }
+
+        .text-mybright {
+            opacity: 1;
+            color: black;
+        }
+    </style>
+</head>
+<div class="bg-light text-center bg-mydark">
+    <h1 class="text-center text-mybright">Предмети</h1>
+    <p class="text-center text-mybright">
+        <a asp-action="Create">Додати новий предмет</a>
+    </p>
+</div>
 <table class="table jumbotron bg-mydark">
     <thead class="text-mybright">
         <tr>
@@ -50,3 +61,29 @@
         }
     </tbody>
 </table>
+
+
+<div class="container">
+    <div id="chart1"></div>
+</div>
+
+@section scripts{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            $.get('/api/Charts/JsonDataL', function (jsonDataL) {
+                var data = google.visualization.arrayToDataTable(jsonDataL, false);
+                var option = {
+                    title: "Співвідношення пар за к-стю",
+                    width: 400,
+                    height: 300
+                }
+                var chart = new google.visualization.PieChart(document.getElementById('chart1'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+}

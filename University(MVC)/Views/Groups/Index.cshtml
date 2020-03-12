@@ -1,8 +1,11 @@
 ﻿@model IEnumerable<University_MVC_.Groups>
 
+
 @{
     ViewData["Title"] = "Index";
 }
+
+
 @{
     if (ViewBag.Error != null)
     {
@@ -31,12 +34,35 @@
         }
     </style>
 </head>
+
+
 <div class="bg-light text-center bg-mydark">
     <h1 class="text-center text-mybright">Групи</h1>
     <p class="text-center text-mybright">
         <a asp-action="Create">Створити нову групу</a>
     </p>
 </div>
+
+<div>
+    <h3>Оберіть exel-файл для заватаження</h3>
+    @using (Html.BeginForm("Import", "Groups", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
+    {
+        <div>
+            Завантажте Excel-файл:
+            <input type="file" name="fileExcel" id="fileExcel" />
+            <div>
+                <input type="submit" value="Завантажити" />
+            </div>
+        </div>
+    }
+</div>
+<div>
+    <h3>Завантаження інформації в файл</h3>
+    <a asp-action="Export">Завантажити</a>
+</div>
+
+
+
 <table class="table jumbotron bg-mydark">
     <thead class="text-mybright">
         <tr>
