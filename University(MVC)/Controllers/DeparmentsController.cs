@@ -183,6 +183,23 @@ namespace University_MVC_.Controllers
             await _context.SaveChangesAsync();
             foreach (var g in groups)
             {
+                /*var Schedules = from s in _context.Shedule
+                                where s.GroupId == g.Id
+                                select s;
+                foreach(var s in Schedules)
+                {
+                    var lessontoshedule = from lts in _context.LessonToschedule
+                                          where lts.ScheduleId == s.Id
+                                          select lts;
+                    foreach(var lts in lessontoshedule)
+                    {
+                        _context.LessonToschedule.Remove(lts);
+                        await _context.SaveChangesAsync();
+                    }
+ 
+                    _context.Shedule.Remove(s);
+                }
+                await _context.SaveChangesAsync();*/
                 _context.Groups.Remove(g);
             }
             await _context.SaveChangesAsync();

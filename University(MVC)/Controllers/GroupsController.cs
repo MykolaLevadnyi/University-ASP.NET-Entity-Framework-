@@ -161,11 +161,12 @@ namespace University_MVC_.Controllers
                                                 group = _context.Groups.Where(g => g.Name == row.Cell(2).Value.ToString()).FirstOrDefault();
                                                 if (group == null)
                                                 {
+                                                    group = new Groups();
                                                     group.Name = row.Cell(2).Value.ToString();
                                                 }
                                                 var names_d = (from d in _context.Deparments
                                                                select d.Name).ToList();
-                                                if (!names_d.Contains(row.Cell(1).Value.ToString()))
+                                                if(!names_d.Contains(row.Cell(1).Value.ToString()))
                                                 {
                                                     _context.Deparments.Add(dep);
                                                     await _context.SaveChangesAsync();
@@ -195,7 +196,6 @@ namespace University_MVC_.Controllers
                                         }
                                         catch (Exception e)
                                         {
-                                            //logging самостійно :)
 
                                         }
                                     }
@@ -221,18 +221,25 @@ namespace University_MVC_.Controllers
                                                         LessonToschedule lts1 = _context.LessonToschedule.Where(l => l.ScheduleId == shedule.Id && l.Num == i - 2).FirstOrDefault();
                                                         if (lts1 != null)
                                                         {
+                                                           
                                                             if(row.Cell(i).Value.ToString()!=null && names_l.Contains(row.Cell(i).Value.ToString()))
                                                             {
+                                                                lts1.ScheduleId = shedule.Id;
                                                                 lts1.LessonId = _context.Lessons.Where(l => l.Name == row.Cell(i).Value.ToString()).FirstOrDefault().Id;
                                                                 _context.LessonToschedule.Update(lts1);
-                                                            } 
+                                                            }
+                                                            else
+                                                            {
+                                                                _context.LessonToschedule.Remove(lts1);
+                                                            }
                                                         }
                                                         else
                                                         {
-                                                            if (row.Cell(i).Value.ToString() != null && names_l.Contains(row.Cell(i).Value.ToString()))
+                                                        lts1 = new LessonToschedule();
+                                                        if (row.Cell(i).Value.ToString() != null && names_l.Contains(row.Cell(i).Value.ToString()))
                                                             {
-                                                                lts.ScheduleId = shedule.Id;
-                                                                lts.Num = i - 2;
+                                                                lts1.ScheduleId = shedule.Id;
+                                                                lts1.Num = i - 2;
                                                                 lts1.LessonId = _context.Lessons.Where(l => l.Name == row.Cell(i).Value.ToString()).FirstOrDefault().Id;
                                                                 _context.LessonToschedule.Add(lts1);
                                                             }
@@ -265,6 +272,7 @@ namespace University_MVC_.Controllers
                                                 student = _context.Students.Where(s => s.Name == row.Cell(1).Value.ToString() && s.Surname == row.Cell(2).Value.ToString() && s.Gender == row.Cell(3).Value.ToString() && s.Birthday == Convert.ToDateTime(row.Cell(4).Value.ToString())).FirstOrDefault();
                                                 if (student == null)
                                                 {
+                                                    student = new Students();
                                                     student.Name = row.Cell(1).Value.ToString();
                                                     student.Surname = row.Cell(2).Value.ToString();
                                                     student.Gender = row.Cell(3).Value.ToString();
@@ -301,7 +309,7 @@ namespace University_MVC_.Controllers
 
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
 
         public ActionResult Export()
