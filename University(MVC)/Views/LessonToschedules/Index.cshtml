@@ -36,7 +36,10 @@
         <h1 class="text-center text-mybright">Предмети</h1>
 
         <p class="text-center text-mybright">
-            @Html.ActionLink("Додати пару", "Create", new { Id = ViewBag.SheduleId })
+            @if (User.IsInRole("admin"))
+            {
+                @Html.ActionLink("Додати пару", "Create", new { Id = ViewBag.SheduleId })
+            }
         </p>
     </div>
     <table class="table jumbotron bg-mydark">
@@ -62,9 +65,11 @@
                         @Html.DisplayFor(modelItem => item.Lesson.Name)
                     </td>
                     <td>
-                        <!--<a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |-->
-                        @Html.ActionLink("Редагування", "Edit", new { id = item.Id, sheduleId = ViewBag.SheduleId })
-                        <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+
+                        @if (User.IsInRole("admin"))
+                        {
+                            @Html.ActionLink("Редагування", "Edit", new { id = item.Id, sheduleId = ViewBag.SheduleId }) <a> | </a><a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                        }
                     </td>
                 </tr>
             }

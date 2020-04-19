@@ -35,7 +35,10 @@
     <h1 class="text-center text-mybright">Кафедри</h1>
 
     <p class="text-center text-mybright">
-        <a asp-action="Create">Створити нову кафедру</a>
+        @if (User.IsInRole("admin")) 
+        {
+            <a asp-action="Create">Створити нову кафедру</a>
+        }
     </p>
 </div>
 <table class="table jumbotron bg-mydark">
@@ -55,9 +58,10 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Групи</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Групи</a>
+                    @if (User.IsInRole("admin")) { 
+                <a> | </a><a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> <a> | </a><a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                     }
                 </td>
             </tr>
         }

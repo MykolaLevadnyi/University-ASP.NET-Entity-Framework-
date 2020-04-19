@@ -181,9 +181,10 @@ namespace University_MVC_.Controllers
                 _context.Students.Remove(s);
             }
             await _context.SaveChangesAsync();
+            
             foreach (var g in groups)
             {
-                /*var Schedules = from s in _context.Shedule
+                var Schedules = from s in _context.Shedule
                                 where s.GroupId == g.Id
                                 select s;
                 foreach(var s in Schedules)
@@ -193,16 +194,31 @@ namespace University_MVC_.Controllers
                                           select lts;
                     foreach(var lts in lessontoshedule)
                     {
+                        
                         _context.LessonToschedule.Remove(lts);
-                        await _context.SaveChangesAsync();
+                       // await _context.SaveChangesAsync();
                     }
  
-                    _context.Shedule.Remove(s);
+                   // _context.Shedule.Remove(s);
                 }
-                await _context.SaveChangesAsync();*/
-                _context.Groups.Remove(g);
+                //await _context.SaveChangesAsync();
+                //_context.Groups.Remove(g);
             }
             await _context.SaveChangesAsync();
+            foreach (var g in groups)
+            {
+                var Schedules = from s in _context.Shedule
+                                where s.GroupId == g.Id
+                                select s;
+                foreach (var s in Schedules)
+                { _context.Shedule.Remove(s); }
+            }
+            await _context.SaveChangesAsync();
+            foreach (var g in groups)
+            {
+                _context.Groups.Remove(g);
+            }
+                await _context.SaveChangesAsync();
             _context.Deparments.Remove(deparments);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

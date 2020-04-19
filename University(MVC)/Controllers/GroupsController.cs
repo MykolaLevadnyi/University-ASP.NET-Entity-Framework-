@@ -10,6 +10,8 @@ using System.Web;
 using System.IO;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
+using SautinSoft.Document;
+using SautinSoft.Document.Tables;
 
 namespace University_MVC_.Controllers
 {
@@ -194,7 +196,7 @@ namespace University_MVC_.Controllers
                                                 await _context.SaveChangesAsync();
                                             }
                                         }
-                                        catch (Exception e)
+                                        catch (Exception)
                                         {
 
                                         }
@@ -248,7 +250,7 @@ namespace University_MVC_.Controllers
                                                     }
                                             }
                                         }
-                                        catch (Exception e)
+                                        catch (Exception )
                                         {
                                             //logging самостійно :)
 
@@ -291,7 +293,7 @@ namespace University_MVC_.Controllers
                                                 }
                                                 await _context.SaveChangesAsync();
                                             }
-                                            catch (Exception e)
+                                            catch (Exception )
                                             {
                                                 //logging самостійно :)
 
@@ -532,5 +534,95 @@ namespace University_MVC_.Controllers
         {
             return _context.Groups.Any(e => e.Id == id);
         }
+
+
+        public async Task<IActionResult> ExportDocx()
+        {
+            DocumentCore dc = new DocumentCore();
+            Section section = new Section(dc);
+            dc.Sections.Add(section);
+            section.PageSetup.PaperType = PaperType.A3;
+            Table table = new Table(dc);
+            bool flag = true;
+            foreach(var group in _context.Groups.Include(g=>g.Department))
+            {
+                var students = from s in _context.Students
+                               where s.GroupId == @group.Id
+                               select s;
+                foreach(var student in students)
+                {
+                    
+                    if (flag)
+                    {
+                        TableRow row = new TableRow(dc);
+                        
+                        
+                        for (int i = 0; i < 6; i++) {
+                            TableCell cell = new TableCell(dc);
+                            row.Cells.Add(cell);
+                            Run run = new Run(dc);
+                            cell.CellFormat.Borders.SetBorders(MultipleBorderTypes.Outside, BorderStyle.Outset, Color.Black, 1.0);
+
+                            cell.CellFormat.BackgroundColor = Color.Cyan;
+                            if (i == 0) run = new Run(dc, "Кафедра");
+                            if (i == 1) run = new Run(dc, "Група");
+                            if (i == 2) run = new Run(dc, "Ім'я");
+                            if (i == 3) run = new Run(dc, "Прізвище");
+                            if (i == 4) run = new Run(dc, "Стать");
+                            if (i == 5) run = new Run(dc, "День народження");
+                            flag = false;
+                            cell.Blocks.Content.Replace(run.Content);
+                        }
+                        
+                        table.Rows.Add(row);
+                    }
+                    TableRow rownew = new TableRow(dc);
+                    
+                    for (int i = 0; i < 6; i++)
+                    {
+                        TableCell cellnew = new TableCell(dc);
+                        rownew.Cells.Add(cellnew);
+                        cellnew.CellFormat.Borders.SetBorders(MultipleBorderTypes.Outside, BorderStyle.Outset, Color.Black, 1.0);
+                        Run runnew = new Run(dc);
+                        if (i == 0) runnew = new Run(dc, group.Department.Name.ToString());
+                        if (i == 1) runnew = new Run(dc, group.Name.ToString());
+                        if (i == 2) runnew = new Run(dc, student.Name.ToString());
+                        if (i == 3) runnew = new Run(dc, student.Surname.ToString());
+                        if (i == 4) runnew = new Run(dc, student.Gender.ToString());
+                        if (i == 5) runnew = new Run(dc, student.Birthday.Value.ToShortDateString());
+                        cellnew.Blocks.Content.Replace(runnew.Content);
+                    }
+                    
+                    table.Rows.Add(rownew);
+                }
+            }
+            dc.Content.Start.Insert(table.Content);
+            using (MemoryStream docxStream = new MemoryStream())
+            {
+                
+                dc.Save(docxStream, new DocxSaveOptions());
+                docxStream.Flush();
+
+                return new FileContentResult(docxStream.ToArray(),
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                {
+                    FileDownloadName = $"library_{DateTime.UtcNow.ToShortDateString()}.docx"
+                };
+            }
+            //return RedirectToAction("Index", "Home");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

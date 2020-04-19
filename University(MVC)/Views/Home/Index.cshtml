@@ -1,49 +1,61 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Домашня сторінка";
 }
-    <!DOCTYPE html>
-    <html>
-    <head>
-         <style>
-             body {
-                 background-image: url('../images/imgonline-com-ua-resize-r0b7qooitpcrvu3r.png');
-                 background-size: cover;
-                 background-repeat: no-repeat;
-             }
-         .bg-mydark{
-             opacity:0.8;
 
-         }
-         .text-mybright{
-             opacity:1;
-             color:black;
-         }
-         .myl{
-             left:15px;
-         }
-         
-     </style>
-    </head>
-    <body class="mybody">
-        <div class="jumbotron bg-mydark">
-            <h1 class="text-mybright">University</h1>
-        </div>
-        <p>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-image: url('../images/imgonline-com-ua-resize-r0b7qooitpcrvu3r.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .bg-mydark {
+            opacity: 0.8;
+        }
+
+        .text-mybright {
+            opacity: 1;
+            color: black;
+        }
+
+        .myl {
+            left: 15px;
+        }
+    </style>
+</head>
+<body class="mybody">
+    <div class="jumbotron bg-mydark">
+        <h1 class="text-mybright">University</h1>
+    </div>
+    <p>
+        @if (User.Identity.IsAuthenticated) { 
             <button class="btn btn-secondary bg-mydark" onclick="location.href = '@Url.Action("Index", "Groups")'">Groups</button>
-            <button class="btn btn-secondary bg-mydark" onclick="location.href = '@Url.Action("Index", "Deparments")'">Departments</button>
-            <button class="btn btn-secondary bg-mydark" onclick="location.href = '@Url.Action("Index", "Lessons")'">Lessons</button>
-        </p>
-        <div class="row">
-            <div class="col-md-4 myl jumbotron bg-mydark">
-                    <h2 class="text-mybright">Ласкаво просимо до сторінки роботи з данними університету</h2>
-                    <p class="text-mybright">
-                        Це надзвичайна сторінка, яка допоможе
-                        абсолютно безболісно
-                        насолодитись кращим універсітетом в світі.
-                    </p>
-            </div>
+        <button class="btn btn-secondary bg-mydark" onclick="location.href = '@Url.Action("Index", "Deparments")'">Departments</button>
+        <button class="btn btn-secondary bg-mydark" onclick="location.href = '@Url.Action("Index", "Lessons")'">Lessons</button>
+        }
+        else
+        {
+        <div class="bg-white col-md-4 bg-mydark"><p class="text-mybright">Для початку роботи з сайтом авторизуйтесь</p></div>
+        }
+    </p>
+    <div class="row">
+        <div class="col-md-4 myl jumbotron bg-mydark">
+            <h2 class="text-mybright">Ласкаво просимо до сторінки роботи з данними університету</h2>
+            <p class="text-mybright">
+                Це надзвичайна сторінка, яка допоможе
+                абсолютно безболісно
+                насолодитись кращим універсітетом в світі.
+            </p>
         </div>
+    </div>
 
-        <marquee behavior="alternate" direction="right">KILL ME PLS</marquee>
-    </body>
-    </html>
+    <marquee behavior="alternate" direction="right">KILL ME PLS</marquee>
+</body>
+</html>

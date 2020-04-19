@@ -65,9 +65,11 @@
                 <td>
 
                     <a asp-action="Shedule" asp-route-id="@item.Id">Розклад</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Студенти</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Студенти</a>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a> | </a><a asp-action="Edit" asp-route-id="@item.Id">Редагування</a> <a> | </a><a asp-action="Delete" asp-route-id="@item.Id">Видалення</a>
+                    }
                 </td>
             </tr>
         }

@@ -1,0 +1,49 @@
+﻿@model University_MVC_.ViewModel.RegisterViewModel
+    <head>
+        <style>
+
+            .otc {
+                margin-left: 20px;
+            }
+
+            .bg-mydark {
+                opacity: 0.8;
+            }
+
+            .text-mybright {
+                opacity: 1;
+                color: black;
+            }
+        </style>
+    </head>
+    <div class="bg-light text-center bg-mydark">
+        <h2 class="text-center text-mybright">Реєстрація нового користувача</h2>
+    </div>
+    <div class="bg-light bg-mydark">
+        <form method="post" asp-controller="Account" asp-action="Register">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="text-mybright otc">
+                <label asp-for="Email"></label><br />
+                <input asp-for="Email" />
+                <span asp-validation-for="Email"></span>
+            </div>
+            <div class="text-mybright otc">
+                <label asp-for="Year"></label><br />
+                <input asp-for="Year" />
+                <span asp-validation-for="Year"></span>
+            </div>
+            <div class="text-mybright otc">
+                <label asp-for="Password"></label><br />
+                <input asp-for="Password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="text-mybright otc">
+                <label asp-for="PasswordConfirm"></label><br />
+                <input asp-for="PasswordConfirm" />
+                <span asp-validation-for="PasswordConfirm"></span>
+            </div>
+            <div class="text-mybright otc">
+                <input type="submit" value="Реєстрація" />
+            </div>
+        </form>
+    </div>
